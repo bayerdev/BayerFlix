@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bayer Family Gallery</title>
+<meta name="description" content="Bayerflix - the Bayer family photo and video gallery.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#141414">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%23141414'/%3E%3Ctext x='50' y='72' font-size='68' font-weight='700' text-anchor='middle' fill='%23e50914' font-family='Arial,sans-serif'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<noscript><p style="padding:2rem;color:#fff;background:#141414;font-family:sans-serif">Please turn on JavaScript to use the Bayer Family Gallery.</p></noscript>
+
+<section id="profileScreen" class="profile-screen">
+  <button class="theme-fab" id="themeFab" title="Appearance"><i class="fa-solid fa-palette"></i></button>
+  <h1 class="brand brand-large">BAYER<span>FLIX</span></h1>
+  <h2 class="profile-title">Who's watching?</h2>
+  <div id="profileGrid" class="profile-grid"></div>
+</section>
+
+<div id="loginModal" class="modal hidden">
+  <div class="modal-box small">
+    <button class="modal-close" data-close="loginModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="loginName">Sign in</h3>
+    <form id="loginForm">
+      <label for="loginCode">Family access code</label>
+      <input id="loginCode" type="password" autocomplete="current-password" placeholder="Enter your access code" required>
+      <p id="loginError" class="form-error"></p>
+      <button type="submit" class="btn btn-red full">Continue</button>
+    </form>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <header class="topbar" id="topbar">
+    <div class="topbar-left">
+      <h1 class="brand">BAYER<span>FLIX</span></h1>
+      <nav class="nav-links">
+        <button class="nav-link active" id="navHome">Home</button>
+        <button class="nav-link" id="navAlbums">Albums</button>
+        <button class="nav-link" id="navEvents">Family Updates</button>
+        <button class="nav-link" id="navPhotos">Photos</button>
+        <button class="nav-link" id="navVideos">Videos</button>
+        <button class="nav-link" id="navMine">My Uploads</button>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box" id="searchBox">
+        <button class="icon-btn" id="searchToggle"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <input id="searchInput" type="text" placeholder="Search caption, #hashtag, name, event">
+      </div>
+      <div class="user-menu-wrap" id="uploadMenuWrap">
+        <button class="btn btn-red" id="uploadBtn"><i class="fa-solid fa-upload"></i><span>Upload</span><i class="fa-solid fa-caret-down"></i></button>
+        <div class="user-menu hidden" id="uploadMenu">
+          <button class="user-menu-item" id="menuUploadMedia"><i class="fa-solid fa-photo-film"></i> Photos &amp; videos</button>
+          <button class="user-menu-item" id="menuUploadKokong"><i class="fa-solid fa-dove"></i> Photos of Kokong</button>
+          <button class="user-menu-item" id="menuUploadUpdate"><i class="fa-solid fa-comment-dots"></i> Family update</button>
+        </div>
+      </div>
+      <button class="icon-btn" id="shareBtn" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
+      <button class="icon-btn" id="themeBtn" title="Appearance"><i class="fa-solid fa-palette"></i></button>
+      <div class="user-menu-wrap" id="userMenuWrap">
+        <button class="user-chip" id="userChip" title="Account">
+          <span class="avatar" id="userAvatar"></span>
+          <span id="userName"></span>
+          <i class="fa-solid fa-caret-down user-caret"></i>
+        </button>
+        <div class="user-menu hidden" id="userMenu">
+          <button class="user-menu-item" id="menuProfile"><i class="fa-solid fa-pen"></i> Edit profile</button>
+          <button class="user-menu-item" id="menuSwitch"><i class="fa-solid fa-user-group"></i> Switch profile</button>
+          <div class="user-menu-divider"></div>
+          <button class="user-menu-item" id="menuLogout"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="hero" class="hero"></section>
+
+  <section class="filters" id="filtersSection">
+    <div id="genreChips" class="chips"></div>
+    <div id="tagChips" class="chips tag-chips"></div>
+  </section>
+
+  <section class="toolbar" id="toolbarSection">
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <label class="tool-label" for="uploaderFilter">Member</label>
+      <select id="uploaderFilter"></select>
+      <label class="tool-label" for="sortSelect">Sort</label>
+      <select id="sortSelect">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="az">Caption A–Z</option>
+        <option value="uploader">By uploader</option>
+      </select>
+      <button class="btn btn-ghost hidden" id="slideshowBtn"><i class="fa-solid fa-play"></i> <span>Slideshow</span></button>
+      <button class="btn btn-ghost" id="selectBtn"><i class="fa-solid fa-check-double"></i> <span id="selectLabel">Select</span></button>
+      <button class="btn btn-red hidden" id="addToAlbum"><i class="fa-solid fa-plus"></i> <span id="addToAlbumLabel"></span></button>
+      <button class="btn btn-ghost hidden" id="clearFilters"><i class="fa-solid fa-filter-circle-xmark"></i> Clear</button>
+    </div>
+  </section>
+
+  <main id="content" class="content"></main>
+
+  <section id="eventsPage" class="events-page hidden">
+    <div class="events-head">
+      <div>
+        <h2>Family Updates</h2>
+        <p>See what everyone is up to while we're apart.</p>
+      </div>
+      <button class="btn btn-red" id="newEventBtn"><i class="fa-solid fa-plus"></i> <span>Share an update</span></button>
+    </div>
+    <div id="eventFilters" class="chips"></div>
+    <div id="eventsList"></div>
+  </section>
+
+  <footer class="footer">Made with love by the Bayer family</footer>
+</div>
+
+<div id="uploadModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" data-close="uploadModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Upload photos &amp; videos</h3>
+    <form id="uploadForm">
+      <label class="drop-zone" id="dropZone" for="fileInput">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span id="dropText">Click or drop photos and videos here</span>
+        <input id="fileInput" type="file" accept="image/*,video/*" multiple hidden>
+      </label>
+      <div id="previewList" class="preview-list"></div>
+      <p class="file-name">Photos are resized automatically. Videos can be up to 50 MB each.</p>
+      <label for="captionInput">Caption</label>
+      <input id="captionInput" type="text" placeholder="Lola's 70th birthday #lola #birthday">
+      <label>Family event (choose one or more)</label>
+      <div id="genreChecks" class="check-grid"></div>
+      <label>Who is it for? (celebrant, or who is gathering)</label>
+      <div id="peopleChecks" class="check-grid"></div>
+      <label for="takenInput">Date it happened (optional)</label>
+      <input id="takenInput" type="date">
+      <label for="tagsInput">Hashtags</label>
+      <input id="tagsInput" type="text" placeholder="#cebu #summer2026">
+      <p id="uploadError" class="form-error"></p>
+      <button type="submit" class="btn btn-red full" id="uploadSubmit">Upload</button>
+    </form>
+  </div>
+</div>
+
+<div id="profileModal" class="modal hidden">
+  <div class="modal-box small center">
+    <button class="modal-close" data-close="profileModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Edit profile</h3>
+    <div class="avatar-xl" id="profileAvatarLarge"></div>
+    <h4 class="profile-modal-name" id="profileModalName"></h4>
+    <p class="profile-modal-meta" id="profileModalMeta"></p>
+    <input id="avatarInput" type="file" accept="image/*" hidden>
+    <button class="btn btn-red full" id="changeAvatar"><i class="fa-solid fa-camera"></i> Change photo</button>
+    <button class="btn btn-ghost full" id="removeAvatar"><i class="fa-solid fa-trash"></i> Remove photo</button>
+    <p id="avatarError" class="form-error"></p>
+  </div>
+</div>
+
+<div id="viewerModal" class="modal viewer hidden">
+  <button class="modal-close" data-close="viewerModal"><i class="fa-solid fa-xmark"></i></button>
+  <button class="nav-arrow left" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+  <button class="nav-arrow right" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+  <div class="viewer-box">
+    <div class="viewer-media" id="viewerMedia"></div>
+    <div class="viewer-info">
+      <div class="viewer-head">
+        <div>
+          <h3 id="viewerCaption"></h3>
+          <p id="viewerMeta"></p>
+        </div>
+        <div class="viewer-actions">
+          <button class="btn btn-ghost" id="slideBtn"><i class="fa-solid fa-play"></i> <span>Slideshow</span></button>
+          <button class="btn btn-ghost" id="downloadBtn"><i class="fa-solid fa-download"></i> <span>Download</span></button>
+          <button class="btn btn-red" id="addMoreBtn"><i class="fa-solid fa-plus"></i> Add more</button>
+          <button class="btn btn-ghost hidden" id="editBtn"><i class="fa-solid fa-pen"></i> Edit</button>
+          <button class="btn btn-ghost hidden" id="deleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+        </div>
+      </div>
+      <div id="viewerTags" class="chips"></div>
+      <div class="viewer-reactions">
+        <button class="event-action" id="viewerHeart"></button>
+        <button class="event-action" id="viewerCommentToggle"></button>
+      </div>
+      <div id="viewerComments" class="event-comments hidden"></div>
+    </div>
+  </div>
+</div>
+
+<div id="shareModal" class="modal hidden">
+  <div class="modal-box small center">
+    <button class="modal-close" data-close="shareModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Share with family</h3>
+    <img id="qrImage" class="qr" alt="QR code">
+    <input id="shareLink" type="text" readonly>
+    <button class="btn btn-red full" id="copyLink"><i class="fa-solid fa-link"></i> Copy link</button>
+  </div>
+</div>
+
+<div id="eventModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" data-close="eventModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3 id="eventModalTitle">Share an update</h3>
+    <form id="eventForm">
+      <label for="eventTitle">What's happening?</label>
+      <input id="eventTitle" type="text" placeholder="Starting my new job in Cebu" maxlength="120" required>
+      <label for="eventCategory">Type</label>
+      <select id="eventCategory"></select>
+      <label for="eventDate">Date (optional)</label>
+      <input id="eventDate" type="date">
+      <label for="eventLocation">Where (optional)</label>
+      <input id="eventLocation" type="text" placeholder="Cebu City" maxlength="80">
+      <label for="eventDetails">Details</label>
+      <textarea id="eventDetails" rows="4" placeholder="Tell the family more..."></textarea>
+      <input id="eventFile" type="file" accept="image/*,video/*" hidden>
+      <button type="button" class="btn btn-ghost full" id="eventFileBtn"><i class="fa-solid fa-image"></i> Add photo or video</button>
+      <button type="button" class="btn btn-ghost full hidden" id="eventRemoveMedia"><i class="fa-solid fa-trash"></i> Remove photo or video</button>
+      <p class="file-name" id="eventFileName">No photo or video attached</p>
+      <p id="eventError" class="form-error"></p>
+      <button type="submit" class="btn btn-red full" id="eventSubmit">Post update</button>
+    </form>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal hidden">
+  <div class="modal-box small center">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p class="confirm-message" id="confirmMessage"></p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
+      <button class="btn btn-red" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="modal-close" data-close="editModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Edit upload</h3>
+    <form id="editForm">
+      <label for="editCaption">Caption</label>
+      <input id="editCaption" type="text" placeholder="Caption">
+      <label>Albums (choose one or more)</label>
+      <div id="editGenreChecks" class="check-grid"></div>
+      <label>Who is it for? (celebrant, or who is gathering)</label>
+      <div id="editPeopleChecks" class="check-grid"></div>
+      <label for="editTaken">Date it happened (optional)</label>
+      <input id="editTaken" type="date">
+      <label for="editTags">Hashtags</label>
+      <input id="editTags" type="text" placeholder="#cebu #summer2026">
+      <input id="editFile" type="file" accept="image/*,video/*" hidden>
+      <button type="button" class="btn btn-ghost full" id="editFileBtn"><i class="fa-solid fa-file-arrow-up"></i> Replace photo or video</button>
+      <p class="file-name" id="editFileName">Keep current file</p>
+      <p id="editError" class="form-error"></p>
+      <button type="submit" class="btn btn-red full">Save changes</button>
+    </form>
+  </div>
+</div>
+
+<div id="selectBar" class="select-bar hidden">
+  <span id="selectCount">0 selected</span>
+  <select id="moveGenre"></select>
+  <button class="btn btn-red" id="moveBtn"><i class="fa-solid fa-folder-open"></i> Move</button>
+  <button class="btn btn-ghost" id="bulkDeleteBtn"><i class="fa-solid fa-trash"></i> Delete</button>
+  <button class="btn btn-ghost" id="cancelSelect">Cancel</button>
+</div>
+
+<div id="themeModal" class="modal hidden">
+  <div class="modal-box small">
+    <button class="modal-close" data-close="themeModal"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Appearance</h3>
+    <label>Mode</label>
+    <div class="segmented" id="modeOptions">
+      <button data-mode="dark"><i class="fa-solid fa-moon"></i>Dark</button>
+      <button data-mode="light"><i class="fa-solid fa-sun"></i>Light</button>
+      <button data-mode="system"><i class="fa-solid fa-circle-half-stroke"></i>System</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="cloud.js"></script>
+<script src="gallery.js"></script>
+</body>
+</html>
