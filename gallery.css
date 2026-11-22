@@ -254,8 +254,10 @@ select {
   transition: all 0.3s;
 }
 
-.search-box input {
+.search-box input[type='text'] {
   width: 0;
+  min-width: 0;
+  padding: 0;
   opacity: 0;
   background: transparent;
   border: none;
@@ -274,8 +276,9 @@ select {
   color: var(--text);
 }
 
-.search-box.open input {
+.search-box.open input[type='text'] {
   width: 260px;
+  padding: 8px 6px;
   opacity: 1;
 }
 
@@ -1760,7 +1763,7 @@ textarea {
     display: none;
   }
 
-  .search-box.open input {
+  .search-box.open input[type='text'] {
     width: 150px;
   }
 
@@ -1855,7 +1858,7 @@ video {
     padding: 8px 12px;
   }
 
-  .search-box.open input {
+  .search-box.open input[type='text'] {
     width: 110px;
   }
 
@@ -1967,5 +1970,62 @@ video {
 
   .toolbar {
     padding: 10px 4%;
+  }
+}
+
+/* ===== Phone header, hero spacing and bottom menu ===== */
+@media (max-width: 900px) {
+  .topbar:has(.search-box.open) .brand {
+    display: none;
+  }
+
+  .search-box.open input[type='text'] {
+    width: 40vw;
+    max-width: 220px;
+  }
+
+  .hero {
+    height: auto;
+    min-height: 380px;
+    padding: 110px 5% 56px;
+  }
+
+  .hero-badge {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+  }
+
+  .hero-meta {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .filters {
+    margin-top: 6px;
+  }
+
+  .chips {
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 6px 13px;
+    font-size: 0.8rem;
+  }
+
+  .nav-links {
+    justify-content: space-around;
+    gap: 0;
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+    padding: 8px 7px;
+    font-size: 0.7rem;
   }
 }
